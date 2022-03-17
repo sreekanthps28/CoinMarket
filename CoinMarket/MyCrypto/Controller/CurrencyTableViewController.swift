@@ -100,6 +100,7 @@ class CurrencyTableViewController: UITableViewController {
     
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 77
+        tableView.accessibilityIdentifier = "table--currencyTable"
         
        /// Configure the activity indicator  view
         configureLoading()

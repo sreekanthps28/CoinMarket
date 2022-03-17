@@ -17,6 +17,27 @@ class MyCryptoTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+    
+    func testFetchCurrencies(){
+        
+        let exp = expectation(description:"fetching currenciew from server")
+        
+        let coinLimit = 100
+        let strUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap _desc&per_page=\(coinLimit)&page=1&sparkline=false"
+        if let encoded = strUrl.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+           let myURL = URL(string: encoded) {
+            
+            let session: URLSession = URLSession(configuration: .default)
+            session.dataTask(with: myURL) { data, response, error in
+               XCTAssertNil(error)
+               exp.fulfill()
+            }.resume()
+            waitForExpectations(timeout: 10.0) { (error) in
+               print(error?.localizedDescription ?? "error")
+            }
+        }
+           
+    }
 
     func testExample() throws {
         // This is an example of a functional test case.
