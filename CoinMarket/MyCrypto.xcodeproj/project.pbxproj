@@ -13,6 +13,8 @@
 		F73AF96227E01B7F00D750DB /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AF96127E01B7F00D750DB /* Currency.swift */; };
 		F73AF96827E099FD00D750DB /* CurrencyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73AF96727E099FD00D750DB /* CurrencyTableViewController.swift */; };
 		F7759D4027E015D000172EA0 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7759D3F27E015D000172EA0 /* DataFetcher.swift */; };
+		F77B78C827E404C400ECE459 /* CurrencyTableViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77B78C727E404C400ECE459 /* CurrencyTableViewPresenter.swift */; };
+		F77B78CA27E42A7F00ECE459 /* DetailTableViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77B78C927E42A7F00ECE459 /* DetailTableViewPresenter.swift */; };
 		F79A512827E23F9200B8A1D2 /* DetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79A512727E23F9200B8A1D2 /* DetailTableViewController.swift */; };
 		F7D3019E27E2B80400AE256B /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D3019D27E2B80400AE256B /* Utilities.swift */; };
 		F7E4417C27E00EED00835C9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E4417B27E00EED00835C9E /* AppDelegate.swift */; };
@@ -55,6 +57,8 @@
 		F73AF96127E01B7F00D750DB /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		F73AF96727E099FD00D750DB /* CurrencyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewController.swift; sourceTree = "<group>"; };
 		F7759D3F27E015D000172EA0 /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
+		F77B78C727E404C400ECE459 /* CurrencyTableViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTableViewPresenter.swift; sourceTree = "<group>"; };
+		F77B78C927E42A7F00ECE459 /* DetailTableViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewPresenter.swift; sourceTree = "<group>"; };
 		F79A512727E23F9200B8A1D2 /* DetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewController.swift; sourceTree = "<group>"; };
 		F7C908C027E017ED008074EB /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7D3019D27E2B80400AE256B /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -124,6 +128,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F77B78CB27E4333100ECE459 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				F77B78C727E404C400ECE459 /* CurrencyTableViewPresenter.swift */,
+				F77B78C927E42A7F00ECE459 /* DetailTableViewPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
 		F7D3019F27E2BDCD00AE256B /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -132,13 +145,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		F7D301A027E2BDE600AE256B /* Controller */ = {
+		F7D301A027E2BDE600AE256B /* View */ = {
 			isa = PBXGroup;
 			children = (
 				F79A512727E23F9200B8A1D2 /* DetailTableViewController.swift */,
 				F73AF96727E099FD00D750DB /* CurrencyTableViewController.swift */,
 			);
-			path = Controller;
+			path = View;
 			sourceTree = "<group>";
 		};
 		F7D301A127E2BDFE00AE256B /* HelperClasses */ = {
@@ -177,9 +190,10 @@
 			children = (
 				F7E4417B27E00EED00835C9E /* AppDelegate.swift */,
 				F7E4417D27E00EED00835C9E /* SceneDelegate.swift */,
-				F7D301A027E2BDE600AE256B /* Controller */,
-				F7D301A127E2BDFE00AE256B /* HelperClasses */,
+				F77B78CB27E4333100ECE459 /* Presenter */,
+				F7D301A027E2BDE600AE256B /* View */,
 				F7D3019F27E2BDCD00AE256B /* Model */,
+				F7D301A127E2BDFE00AE256B /* HelperClasses */,
 				F7E4418127E00EED00835C9E /* Main.storyboard */,
 				F7E4418427E00EEE00835C9E /* Assets.xcassets */,
 				F7E4418627E00EEE00835C9E /* LaunchScreen.storyboard */,
@@ -446,7 +460,9 @@
 			files = (
 				F79A512827E23F9200B8A1D2 /* DetailTableViewController.swift in Sources */,
 				F73AF96827E099FD00D750DB /* CurrencyTableViewController.swift in Sources */,
+				F77B78C827E404C400ECE459 /* CurrencyTableViewPresenter.swift in Sources */,
 				F7D3019E27E2B80400AE256B /* Utilities.swift in Sources */,
+				F77B78CA27E42A7F00ECE459 /* DetailTableViewPresenter.swift in Sources */,
 				F73AF96227E01B7F00D750DB /* Currency.swift in Sources */,
 				F7E4417C27E00EED00835C9E /* AppDelegate.swift in Sources */,
 				F7E4417E27E00EED00835C9E /* SceneDelegate.swift in Sources */,

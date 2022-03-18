@@ -34,12 +34,18 @@ class DetailTableViewController: UITableViewController {
     @IBOutlet weak var maxSupplyLabel: UILabel!
     
     @IBOutlet weak var fullyDialutedMarketCapLabel: UILabel!
+    
+    /// Presenter
+    private let detailTableviewPresenter:DetailTableViewPresenter = DetailTableViewPresenter.init(imageFetcher: DataFetcher())
    
     /// This object is using to hold the selected item , using this object we are going to show the other properties of the selected currency here.
     var currency:Currency?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /// Set Delegate To the Presenter
+        detailTableviewPresenter.attachView(self)
         
         self.navigationController?.navigationBar.tintColor = self.traitCollection.userInterfaceStyle == .dark ? .white : .black
         
@@ -57,18 +63,10 @@ class DetailTableViewController: UITableViewController {
     func configureDetailViewWithItem(currency:Currency){
         
         self.currencyName.text = currency.name
-        self.activityIndicatorView.startAnimating()
-        URLSession.shared.dataTask( with: URL(string:currency.image)! as URL, completionHandler: {
-              (data, response, error) -> Void in
-              DispatchQueue.main.async {
-                 if let data = data {
-                     self.currencyImage.image = UIImage(data: data)
-                     self.activityIndicatorView.stopAnimating()
-                 }
-              }
-        }).resume()
+        self.detailTableviewPresenter.setImage(urlString: currency.image)
         self.symbolLabel.text = currency.symbol
-        self.priceLabel.text = Utilities.df2so(currency.currentPrice) == "0" ? String(format: "€ \(currency.currentPrice.toString())"):  String(format: "€ %.2f", currency.currentPrice)
+        self.detailTableviewPresenter.setCurrencyPrice(currency.currentPrice)
+        
         self.marketLabel.text =  String(format: "€ \( Utilities.df2so(currency.marketCap))")
         self.lowLabel.text = Utilities.df2so(currency.low24H) == "0" ? String(format: "€ \(currency.low24H.toString())"):  String(format: "€ %.2f", currency.low24H)
 
@@ -147,4 +145,28 @@ class DetailTableViewController: UITableViewController {
     }
     */
 
+}
+
+extension DetailTableViewController:DetailTableViewDelegate{
+    func startLoading() {
+        self.activityIndicatorView.startAnimating()
+    }
+    
+    func finishLoading() {
+        self.activityIndicatorView.stopAnimating()
+    }
+    
+    func setImage(_ data: Data?) {
+        if data != nil{
+            self.currencyImage.image = UIImage.init(data: data!)
+        }
+    }
+    
+    func setCurrencyPrice(_ string: String) {
+        
+        self.priceLabel.text = string
+        
+    }
+    
+    
 }

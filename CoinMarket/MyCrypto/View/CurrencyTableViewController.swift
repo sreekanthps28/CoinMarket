@@ -14,6 +14,9 @@ class CurrencyTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
     
+    /// Presenter
+    private let currencyTableViewCellPresenter:CurrencyCellPresenter = CurrencyCellPresenter.init(imageFetcher: DataFetcher())
+    
     @IBOutlet weak var activityController: UIActivityIndicatorView!
     @IBOutlet weak var percentageLabel: UILabel!
     @IBOutlet weak var percentageImage: UIImageView!
@@ -25,30 +28,52 @@ class CurrencyTableViewCell: UITableViewCell {
    
     /// Configue Cell Object with the corresponding item.
     func configureCellwithItem(currency: Currency){
+        
+        /// Set Delegate To the Presenter
+        currencyTableViewCellPresenter.attachView(self)
+        
         self.currencyName.text = currency.name
-        self.activityController.startAnimating()
-        URLSession.shared.dataTask( with: URL(string:currency.image)! as URL, completionHandler: {
-              (data, response, error) -> Void in
-              DispatchQueue.main.async {
-                 if let data = data {
-                     self.currencyImage.image = UIImage(data: data)
-                     self.activityController.stopAnimating()
-                 }
-              }
-        }).resume()
+        self.currencyTableViewCellPresenter.setImage(urlString: currency.image)
         self.currencySymbol.text = currency.symbol
-        self.currencyPrice.text =  Utilities.df2so(currency.currentPrice) == "0" ? String(format: "€ \(currency.currentPrice.toString())"):  String(format: "€ %.2f", currency.currentPrice)
+        self.currencyTableViewCellPresenter.setCurrencyPrice(currency.currentPrice)
         self.percentageLabel.text = String(format: "%.2f%%", currency.priceChangePercentage24H)
         self.percentageLabel.textColor = (currency.priceChangePercentage24H < 0) ? .red : .green
         self.perImageConstraint.constant = (currency.priceChangePercentage24H < 0) ? 2.5 : -2.5
-        let imageName = (currency.priceChangePercentage24H < 0) ? "DownArrow" : "UpArrow"
-        self.percentageImage.image = UIImage.init(named:imageName)
+        self.percentageImage.image = (currency.priceChangePercentage24H < 0) ? UIImage.init(named:"DownArrow") : UIImage.init(named:"UpArrow")
     }
+}
+
+// MARK: - CurrencyTableViewCellDelegate Methods
+
+extension CurrencyTableViewCell:CurrencyTableViewCellDelegate {
+    
+    func setCurrencyPrice(_ string: String) {
+        self.currencyPrice.text = string
+    }
+    
+    func startLoading() {
+        self.activityController.startAnimating()
+    }
+    
+    func finishLoading() {
+        self.activityController.stopAnimating()
+    }
+    
+    func setImage(_ data: Data?) {
+        if data != nil{
+            self.currencyImage.image = UIImage.init(data: data!)
+        }
+    }
+    
+    
 }
 
 // MARK: - TableViewController
 
 class CurrencyTableViewController: UITableViewController {
+    
+    /// Presenter
+    private let currencyPrersenter:CurrencyPresenter = CurrencyPresenter.init(currencyFetcher: DataFetcher())
     
    
     /// Data source - Holding all currencies
@@ -72,23 +97,7 @@ class CurrencyTableViewController: UITableViewController {
     
     @objc func loadCurrencyDetails(){
         ///Get all currency details  from API
-        let dataFetcher  = DataFetcher()
-    
-        self.loading.startAnimating()
-        dataFetcher.getDataForAllCurencies { (coinArray) in
-            guard let coinArray = coinArray else {
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.currencySource = coinArray
-                self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
-                self.loading.stopAnimating()
-                print("Total Array count is \(self.currencySource.count)")
-            }
-            print(coinArray);
-        }
+        currencyPrersenter.getCurrencies()
     }
 
     override func viewDidLoad() {
@@ -97,6 +106,8 @@ class CurrencyTableViewController: UITableViewController {
     
         self.title = "CoinMarket"
         
+        /// Setting Delegate
+        currencyPrersenter.attachView(self)
     
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 77
@@ -199,6 +210,30 @@ class CurrencyTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+
+}
+
+// MARK: - CurrencyTableViewDelegate Methods
+
+extension CurrencyTableViewController: CurrencyTableViewDelegate {
+  
+    func startLoading() {
+        self.loading.startAnimating()
+    }
+
+    func finishLoading() {
+        self.loading.stopAnimating()
+    }
+
+    func setCurrencies(_ currencies: [Currency]) {
+        DispatchQueue.main.async {
+            self.currencySource = currencies
+            self.tableView?.isHidden = false
+            self.tableView.reloadData()
+            self.refreshControl?.endRefreshing()
+            print("Total Array count is \(self.currencySource.count)")
+        }
+    }
 
 }
 

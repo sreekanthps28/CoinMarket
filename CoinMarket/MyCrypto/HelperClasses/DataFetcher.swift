@@ -5,6 +5,7 @@
 //  Created by SREEKANTH PS on 15/03/2022.
 //
 import Foundation
+import UIKit
 
 class DataFetcher {
 
@@ -32,5 +33,20 @@ class DataFetcher {
             }
             task.resume()
         }
+    }
+    /// Use this method to fetch image from url string
+    func getImage(urlString:String, completion: @escaping (Data?) -> ()) {
+        
+        URLSession.shared.dataTask( with: URL(string:urlString)! as URL, completionHandler: {
+              (data, response, error) -> Void in
+              DispatchQueue.main.async {
+                  
+                  guard let data = data else {
+                      DispatchQueue.main.async { completion(nil) }
+                      return
+                  }
+                  DispatchQueue.main.async { completion(data) }
+              }
+        }).resume()
     }
 }
